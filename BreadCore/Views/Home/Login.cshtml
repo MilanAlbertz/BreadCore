@@ -1,0 +1,27 @@
+﻿@{
+    var returnUrl = ViewData["Login"] as string;
+    var error = TempData["Error"] as string;
+}
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+
+<div class="bg">
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <h2 class="alert-danger" style="padding: 20px; text-align: center">@error</h2>
+    }
+    <div class="text-center">
+        <form action="/login?ReturnUrl=@System.Net.WebUtility.UrlEncode(returnUrl)" class="loginField" method="post">
+            <img class="mt-2" src="/Images/logo aldi.png"/>
+            <h1>Welkom</h1>
+            <label for="bedienerNr" class="">Bediener Nummer:</label>
+            <input type="number" name="bedienerNr" min="1" max="10000" id="bedienerNr" class="loginVelden" placeholder="16" required autofocus />
+            <label for="wachtwoord" class="">Wachtwoord:</label>
+            <input type="password" name="wachtwoord" id="wachtwoord" placeholder="167" class="loginVelden" />
+            <div class="mt-3">
+                <button class="btn btn-lg btn-primary btn-block">Log in</button>
+            </div>
+        </form>
+    </div>
+</div>
