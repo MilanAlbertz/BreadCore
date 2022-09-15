@@ -4,6 +4,7 @@ using BreadCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreadCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220915101203_ThirdCreate")]
+    partial class ThirdCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +59,7 @@ namespace BreadCore.Migrations
 
                     b.HasIndex("GebakkenFiliaalFiliaalNummer");
 
-                    b.ToTable("Brood", (string)null);
+                    b.ToTable("Brood");
                 });
 
             modelBuilder.Entity("BreadCore.Models.BroodType", b =>
@@ -73,7 +75,7 @@ namespace BreadCore.Migrations
 
                     b.HasKey("Type");
 
-                    b.ToTable("BroodType", (string)null);
+                    b.ToTable("BroodType");
                 });
 
             modelBuilder.Entity("BreadCore.Models.Filiaal", b =>
@@ -90,7 +92,7 @@ namespace BreadCore.Migrations
 
                     b.HasKey("FiliaalNummer");
 
-                    b.ToTable("Filiaal", (string)null);
+                    b.ToTable("Filiaal");
                 });
 
             modelBuilder.Entity("BreadCore.Models.Medewerker", b =>
@@ -104,7 +106,10 @@ namespace BreadCore.Migrations
                     b.Property<int>("BedienerNr")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FiliaalNummer")
+                    b.Property<int>("FiliaalNummer")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FiliaalNummer1")
                         .HasColumnType("int");
 
                     b.Property<string>("Rol")
@@ -114,14 +119,11 @@ namespace BreadCore.Migrations
                     b.Property<int>("Wachtwoord")
                         .HasColumnType("int");
 
-                    b.Property<int>("WerkendFiliaal")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("FiliaalNummer");
+                    b.HasIndex("FiliaalNummer1");
 
-                    b.ToTable("Medewerker", (string)null);
+                    b.ToTable("Medewerker");
                 });
 
             modelBuilder.Entity("BreadCore.Models.Brood", b =>
@@ -140,6 +142,7 @@ namespace BreadCore.Migrations
 
                     b.HasOne("BreadCore.Models.Filiaal", "GebakkenFiliaal")
                         .WithMany()
+                        .HasForeignKey("GebakkenFiliaalFiliaalNummer")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -153,7 +156,8 @@ namespace BreadCore.Migrations
             modelBuilder.Entity("BreadCore.Models.Medewerker", b =>
                 {
                     b.HasOne("BreadCore.Models.Filiaal", null)
-                        .WithMany("Medewerkers");
+                        .WithMany("Medewerkers")
+                        .HasForeignKey("FiliaalNummer1");
                 });
 
             modelBuilder.Entity("BreadCore.Models.Filiaal", b =>

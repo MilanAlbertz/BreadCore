@@ -9,5 +9,6 @@ namespace BreadCore.Data
         {
         }
         public DbSet<Brood> Brood { get; set; }
+        public DbSet<BreadCore.Models.Medewerker>? Medewerker { get; set; }
     }
 }

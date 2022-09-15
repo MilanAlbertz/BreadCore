@@ -6,8 +6,13 @@ namespace BreadCore.Models
     public class Medewerker
     {
         [Key]
-        public int Id { get; set; } 
+        public int Id { get; set; }
+        [Required]
         public int BedienerNr { get; set; }
-        public string Wachtwoord { get; set; }
+        [Required]
+        public int Wachtwoord { get; set; }
+        [Required]
+        public string Rol { get; set; }
+        public int WerkendFiliaal { get; set; }
     }
 }
