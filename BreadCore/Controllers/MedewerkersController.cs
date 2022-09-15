@@ -22,12 +22,6 @@ namespace BreadCore.Controllers
         }
 
         // GET: Medewerkers
-        public async Task<IActionResult> Index()
-        {
-              return _context.Medewerker != null ? 
-                          View(await _context.Medewerker.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Medewerker'  is null.");
-        }
 
         // GET: Medewerkers/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -58,15 +52,15 @@ namespace BreadCore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BedienerNr,Wachtwoord,Rol")] Medewerker medewerker)
+        public async Task<IActionResult> Create([Bind("Id,BedienerNr,Wachtwoord,Rol,FiliaalId")] Medewerker medewerker)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(medewerker);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("MedewerkersBeheren");
             }
-            return View(medewerker);
+            return View("MedewerkersBeheren");
         }
 
         // GET: Medewerkers/Edit/5
@@ -152,14 +146,14 @@ namespace BreadCore.Controllers
             {
                 _context.Medewerker.Remove(medewerker);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool MedewerkerExists(int id)
         {
-          return (_context.Medewerker?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Medewerker?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
 
@@ -180,7 +174,7 @@ namespace BreadCore.Controllers
         {
             foreach (var medewerker in _context.Medewerker)
             {
-                if (medewerker.BedienerNr == bedienerNr && medewerker.Wachtwoord == wachtwoord)
+                if (medewerker.BedienerNr == bedienerNr & medewerker.Wachtwoord == wachtwoord)
                 {
                     if (medewerker.Rol == "Medewerker")
                     {
@@ -195,15 +189,10 @@ namespace BreadCore.Controllers
                         return View("SysteemBeheerder");
                     }
                 }
-                else
-                {
-                    TempData["Error"] = "Error. BedienerNr of Wachtwoord is fout.";
-                    return View("login");
-                }
             }
-            return View(returnUrl);
-
-        }
+            TempData["Error"] = "Error. BedienerNr of Wachtwoord is fout.";
+            return View("login");
+        } 
 
         [Authorize]
         public async Task<IActionResult> Logout()
@@ -211,6 +200,11 @@ namespace BreadCore.Controllers
             await HttpContext.SignOutAsync();
             return Redirect("/");
         }
-
+        public async Task<IActionResult> MedewerkersBeheren(string returnUrl)
+        {
+            return _context.Medewerker != null ?
+                        View(await _context.Medewerker.ToListAsync()) :
+                        Problem("Entity set 'AppDbContext.Medewerker'  is null.");
+        }
     }
 }
