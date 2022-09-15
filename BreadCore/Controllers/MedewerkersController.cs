@@ -84,7 +84,7 @@ namespace BreadCore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BedienerNr,Wachtwoord,Rol")] Medewerker medewerker)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BedienerNr,Wachtwoord,Rol,FiliaalId")] Medewerker medewerker)
         {
             if (id != medewerker.Id)
             {
@@ -109,7 +109,7 @@ namespace BreadCore.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("MedewerkersBeheren");
             }
             return View(medewerker);
         }
@@ -148,7 +148,7 @@ namespace BreadCore.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("MedewerkersBeheren");
         }
 
         private bool MedewerkerExists(int id)
