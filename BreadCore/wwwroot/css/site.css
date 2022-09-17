@@ -1,6 +1,10 @@
 body, html {
     height: 100%;
 }
+
+.nav{
+}
+
 .bg {
     /* The image used */
     background-image: url("/Images/aldi filiaal.png");
@@ -39,4 +43,59 @@ body, html {
     position: center;
     margin-bottom: 10px;
 }
+.SysteemBeheerderContrainer {
+    text-align: center;
+    position: relative;
+    width: 50%;
+}
+.SysteemBeheerderImg {
+    width: 60%;
+    height: auto;
+}
+.container {
+    max-width: 1280px;
+    margin: auto;
+    padding: 75px 20px;
+}
+
+.card-btn {
+    position: static !important;
+    margin: 0 !important;
+    transform: none !important;
+    width: 100%!important;
+    height: 50px!important;
+    border-radius: 15px;
+}
+
+.card-img {
+    border-radius: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.inner-wraps {
+    width: 100%;
+    max-width: 100%;
+    border: 5px solid black;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 15px;
+    background-color: white;
+}
+
+.two-grid {
+    margin: auto;
+    max-width: 768px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 80px;
+}
+
+.two-grid > div {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
 

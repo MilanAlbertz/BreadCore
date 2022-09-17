@@ -192,7 +192,13 @@ namespace BreadCore.Controllers
             }
             TempData["Error"] = "Error. BedienerNr of Wachtwoord is fout.";
             return View("login");
-        } 
+        }
+        public IActionResult SysteemBeheerder(string returnUrl)
+        {
+            return View();
+        }
+
+
 
         [Authorize]
         public async Task<IActionResult> Logout()

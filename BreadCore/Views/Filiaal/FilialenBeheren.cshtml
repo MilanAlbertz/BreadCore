@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Filiaal>
+@{
+    ViewData["Title"] = "FilialenBeheren";
+}
+<button><a asp-area="" asp-controller="Medewerkers" asp-action="Logout">Logout</a></button>
+
+<h1 style="text-align: center">Filialen Beheren</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FiliaalId)
+            </th>
+            <td>
+                @Html.DisplayNameFor(model => model.FiliaalNaam)
+            </td>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var obj in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => obj.FiliaalId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => obj.FiliaalNaam)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@obj.FiliaalId">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@obj.FiliaalId">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+

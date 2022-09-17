@@ -1,15 +1,12 @@
-﻿@model IEnumerable<BreadCore.Models.Medewerker>
-
+﻿@model IEnumerable<Medewerker>
 @{
     ViewData["Title"] = "MedewerkersBeheren";
 }
-<button><a asp-area="" asp-controller="Medewerkers" asp-action="Logout">Logout</a></button>
+<h1 style="text-align: center; padding-top: 20px">Medewerkers Beheren</h1>
 
-<h1 style="text-align: center">Medewerkers Beheren</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<button class="btn-dark card-btn" style="width: 200px!important">
+    <a style="color:white" asp-action="Create">Medewerker Toevoegen</a>
+</button>
 <table class="table">
     <thead>
         <tr>
@@ -30,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.BedienerNr)
@@ -47,10 +44,9 @@
 
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

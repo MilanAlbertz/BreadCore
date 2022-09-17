@@ -10,5 +10,6 @@ namespace BreadCore.Data
         }
         public DbSet<Brood> Brood { get; set; }
         public DbSet<Medewerker> Medewerker { get; set; }
+        public DbSet<Filiaal> Filiaal { get; set; }
     }
 }
