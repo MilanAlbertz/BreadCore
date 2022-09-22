@@ -10,7 +10,8 @@ namespace BreadCore.Models
         public int BroodTypeID { get; set; } 
         public string Type { get; set; }
         public int Code { get; set; }
-        public int BakProgramma { get; set; }
+        public int BakprogrammaId { get; set; }
+        public Bakprogramma? Bakprogramma { get; set; }
     }
 }
 

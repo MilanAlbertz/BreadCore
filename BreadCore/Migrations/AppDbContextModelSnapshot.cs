@@ -22,6 +22,23 @@ namespace BreadCore.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("BreadCore.Models.Bakprogramma", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Naam")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bakprogramma");
+                });
+
             modelBuilder.Entity("BreadCore.Models.Brood", b =>
                 {
                     b.Property<int>("Id")
@@ -33,13 +50,16 @@ namespace BreadCore.Migrations
                     b.Property<int>("BroodTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("GebakkenFiliaalFiliaalId")
+                    b.Property<int>("GebakkenFiliaalId")
                         .HasColumnType("int");
 
-                    b.Property<int>("HoeveelheidDerving")
+                    b.Property<int?>("HoeveelheidDerving")
                         .HasColumnType("int");
 
-                    b.Property<int>("HoeveelheidGebakken")
+                    b.Property<int?>("HoeveelheidGebakken")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedewerkerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TijdGebakken")
@@ -49,7 +69,9 @@ namespace BreadCore.Migrations
 
                     b.HasIndex("BroodTypeID");
 
-                    b.HasIndex("GebakkenFiliaalFiliaalId");
+                    b.HasIndex("GebakkenFiliaalId");
+
+                    b.HasIndex("MedewerkerId");
 
                     b.ToTable("Brood");
                 });
@@ -62,7 +84,7 @@ namespace BreadCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BroodTypeID"), 1L, 1);
 
-                    b.Property<int>("BakProgramma")
+                    b.Property<int>("BakprogrammaId")
                         .HasColumnType("int");
 
                     b.Property<int>("Code")
@@ -73,6 +95,8 @@ namespace BreadCore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BroodTypeID");
+
+                    b.HasIndex("BakprogrammaId");
 
                     b.ToTable("BroodType");
                 });
@@ -105,7 +129,7 @@ namespace BreadCore.Migrations
                     b.Property<int>("BedienerNr")
                         .HasColumnType("int");
 
-                    b.Property<int>("FiliaalId")
+                    b.Property<int?>("FiliaalId")
                         .HasColumnType("int");
 
                     b.Property<string>("Rol")
@@ -132,24 +156,46 @@ namespace BreadCore.Migrations
 
                     b.HasOne("BreadCore.Models.Filiaal", "GebakkenFiliaal")
                         .WithMany()
-                        .HasForeignKey("GebakkenFiliaalFiliaalId")
+                        .HasForeignKey("GebakkenFiliaalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BreadCore.Models.Medewerker", "Medewerker")
+                        .WithMany()
+                        .HasForeignKey("MedewerkerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("BroodType");
 
                     b.Navigation("GebakkenFiliaal");
+
+                    b.Navigation("Medewerker");
+                });
+
+            modelBuilder.Entity("BreadCore.Models.BroodType", b =>
+                {
+                    b.HasOne("BreadCore.Models.Bakprogramma", "Bakprogramma")
+                        .WithMany("BroodTypes")
+                        .HasForeignKey("BakprogrammaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bakprogramma");
                 });
 
             modelBuilder.Entity("BreadCore.Models.Medewerker", b =>
                 {
                     b.HasOne("BreadCore.Models.Filiaal", "Filiaal")
                         .WithMany("Medewerkers")
-                        .HasForeignKey("FiliaalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FiliaalId");
 
                     b.Navigation("Filiaal");
+                });
+
+            modelBuilder.Entity("BreadCore.Models.Bakprogramma", b =>
+                {
+                    b.Navigation("BroodTypes");
                 });
 
             modelBuilder.Entity("BreadCore.Models.Filiaal", b =>

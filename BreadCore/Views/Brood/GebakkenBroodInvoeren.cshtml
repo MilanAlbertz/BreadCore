@@ -1,0 +1,48 @@
+﻿@model BreadCore.Models.Bakprogramma
+
+
+<h1 class="text-center" style="padding-top: 20px">Details</h1>
+
+<div>
+    <h4> Bak Programma: @Html.DisplayFor(modelItem => Model.Id)</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayFor(modelItem => Model.Naam)
+                </th>
+                <th>
+                    Code
+                </th>
+                <th>
+                    Hoeveelheid gebakken
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <form method="post" asp-action="BroodAanmaken">
+                @foreach (var item in Model.BroodTypes)
+                {
+                <tr>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.Type)
+                         <input type="hidden" value="@item.Type">
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.Code)
+                        <input type="hidden" value="@item.Code">
+                    </td>
+                    <td>
+                        <input type="number" name="hoeveelheidGebakken" max="1000" required>
+                    </td>
+                </tr>
+                }
+                <submit>
+                    <input type="submit" class="btn btn-lg btn-primary btn-block">
+                </submit>
+            </form>
+        </tbody>
+    </table>
+</div>

@@ -3,6 +3,7 @@ using BreadCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace BreadCore.Controllers
 {
@@ -23,6 +24,25 @@ namespace BreadCore.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || database.Filiaal == null)
+            {
+                return NotFound();
+            }
+
+            var medewerker = await database.Filiaal
+                .Include(k => k.Medewerkers)
+                .FirstOrDefaultAsync(m => m.FiliaalId == id);
+           
+            if (medewerker == null)
+            {
+                return NotFound();
+            }
+
+            return View(medewerker);
         }
 
         [HttpPost]
@@ -92,43 +112,6 @@ namespace BreadCore.Controllers
         {
             return (database.Medewerker?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || database.Filiaal == null)
-            {
-                return NotFound();
-            }
-
-            var filiaal = await database.Filiaal
-                .FirstOrDefaultAsync(m => m.FiliaalId == id);
-            if (filiaal == null)
-            {
-                return NotFound();
-            }
-
-            return View(filiaal);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (database.Filiaal == null)
-            {
-                return Problem("Entity set 'AppDbContext.Filiaal'  is null.");
-            }
-            var filiaal = await database.Filiaal.FindAsync(id);
-            if (filiaal != null)
-            {
-                database.Filiaal.Remove(filiaal);
-            }
-
-            await database.SaveChangesAsync();
-            return RedirectToAction("FilialenBeheren");
-        }
-
 
     }
 }

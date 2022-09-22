@@ -13,8 +13,7 @@ namespace BreadCore.Models
         public int Wachtwoord { get; set; }
         [Required]
         public string Rol { get; set; }   
-
-        public int FiliaalId { get; set; }
+        public int? FiliaalId { get; set; }
         public Filiaal? Filiaal { get; set; }    
     }
 }

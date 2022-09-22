@@ -1,8 +1,9 @@
 ﻿@model BreadCore.Models.Filiaal
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Details";
 }
+
 <header style="">
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3" style="margin-bottom: 0px!important; border-bottom: solid; background-color: lightgray!important">
         <div class="container-fluid">
@@ -28,27 +29,40 @@
     </nav>
 </header>
 
-<h1 class="text-center" style="padding-top: 20px">Filiaal Toevoegen</h1>
 
-<div class="col-md-4" style="display:block; width:50%; margin:0 auto;">
-    <form asp-action="Create" class="loginField" style="border: solid; border-width: 5px">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="FiliaalNaam" class="control-label"></label>
-            <input asp-for="FiliaalNaam" class="form-control" />
-            <span asp-validation-for="FiliaalNaam" class="text-danger"></span>
-        </div>
-        <div class="form-group" style="padding-top: 5px">
-            <button type="submit" value="Annuleer" class="btn-danger" style="height: 35px; border: none">
-                <a style="color: white!important; text-decoration: none" asp-controller="Filiaal" asp-action="FilialenBeheren">Annuleer</a>
-            </button>
+<h1 class="text-center" style="padding-top: 20px">Details</h1>
 
-            <input type="submit" value="Toevoegen" class="btn btn-primary" style="height: 35px; padding-top: 0px; padding-bottom: 0px; border-radius: 0px; margin-top: -5px" />
-        </div>
-    </form>
+<div>
+    <h4> Filiaal: @Html.DisplayFor(modelItem => Model.FiliaalNaam)</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Bediener Nummer
+                </th>
+                <th>
+                    Wachtwoord
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Medewerkers)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BedienerNr)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Wachtwoord)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.FiliaalId">Edit</a> |
+    <a asp-action="FilialenBeheren">Back to List</a>
+</div>

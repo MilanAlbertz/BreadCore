@@ -4,5 +4,30 @@
 @{
     ViewData["Title"] = "Medewerker";
 }
-<h1>De medewerker is ingelogd.</h1>
-<button><a asp-area="" asp-controller="Medewerkers" asp-action="Logout">Logout</a></button>
+
+<div style="background-color:darkslateblue; padding-bottom: 20px">
+    <h1 style="text-align: center; color: white; font-size: 70px;">Welkom</h1>
+</div>
+<div class="row">
+    <div class="container">
+        <div class="two-grid">
+            <div class="col-md-6" )>
+                <div class="SysteemBeheerderContrainer inner-wraps">
+                    <img src="../Images/Medewerkers.png" class="SysteemBeheerderImg card-img" />
+                    <button class="btn-dark card-btn">
+                        <a style="color:white" asp-area="" asp-controller="Brood" asp-action="GebakkenBakprogrammaKiezen">Bakken</a>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="SysteemBeheerderContrainer inner-wraps">
+                    <img src="../Images/Filiaal.png" class="SysteemBeheerderImg card-img" />
+                    <button class="btn-dark card-btn">
+                        <a style="color:white" asp-controller="Filiaal" asp-action="FilialenBeheren">Filialen Beheren</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

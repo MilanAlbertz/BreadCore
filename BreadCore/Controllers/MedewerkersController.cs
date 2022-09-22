@@ -14,6 +14,8 @@ namespace BreadCore.Controllers
 {
     public class MedewerkersController : Controller
     {
+        public int? bedienerNummer { get; set; }
+        public int? filiaalNummer { get; set; }
         private readonly AppDbContext _context;
 
         public MedewerkersController(AppDbContext context)
@@ -178,6 +180,8 @@ namespace BreadCore.Controllers
                 {
                     if (medewerker.Rol == "Medewerker")
                     {
+                        bedienerNummer = bedienerNr;
+                        filiaalNummer = medewerker.FiliaalId;
                         return View("Medewerker");
                     }
                     if (medewerker.Rol == "Manager")
@@ -190,7 +194,7 @@ namespace BreadCore.Controllers
                     }
                 }
             }
-            TempData["Error"] = "Error. BedienerNr of Wachtwoord is fout.";
+            TempData["Error"] = "Helaas. Bedienernummer of Wachtwoord is fout.";
             return View("login");
         }
         public IActionResult SysteemBeheerder(string returnUrl)
