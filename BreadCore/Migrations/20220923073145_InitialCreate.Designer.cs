@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreadCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220922085518_InitialCreate")]
+    [Migration("20220923073145_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,10 +49,11 @@ namespace BreadCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BroodTypeID")
+                    b.Property<int?>("BroodTypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("GebakkenFiliaalId")
+                    b.Property<int?>("GebakkenFiliaalId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("HoeveelheidDerving")
@@ -61,10 +62,10 @@ namespace BreadCore.Migrations
                     b.Property<int?>("HoeveelheidGebakken")
                         .HasColumnType("int");
 
-                    b.Property<int>("MedewerkerId")
+                    b.Property<int?>("MedewerkerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TijdGebakken")
+                    b.Property<DateTime?>("TijdGebakken")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -93,7 +94,6 @@ namespace BreadCore.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BroodTypeID");
@@ -152,9 +152,7 @@ namespace BreadCore.Migrations
                 {
                     b.HasOne("BreadCore.Models.BroodType", "BroodType")
                         .WithMany()
-                        .HasForeignKey("BroodTypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BroodTypeID");
 
                     b.HasOne("BreadCore.Models.Filiaal", "GebakkenFiliaal")
                         .WithMany()
@@ -164,9 +162,7 @@ namespace BreadCore.Migrations
 
                     b.HasOne("BreadCore.Models.Medewerker", "Medewerker")
                         .WithMany()
-                        .HasForeignKey("MedewerkerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MedewerkerId");
 
                     b.Navigation("BroodType");
 

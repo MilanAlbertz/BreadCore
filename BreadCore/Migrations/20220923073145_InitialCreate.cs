@@ -41,7 +41,7 @@ namespace BreadCore.Migrations
                 {
                     BroodTypeID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Code = table.Column<int>(type: "int", nullable: false),
                     BakprogrammaId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -83,12 +83,12 @@ namespace BreadCore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BroodTypeID = table.Column<int>(type: "int", nullable: false),
+                    BroodTypeID = table.Column<int>(type: "int", nullable: true),
                     GebakkenFiliaalId = table.Column<int>(type: "int", nullable: false),
-                    TijdGebakken = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TijdGebakken = table.Column<DateTime>(type: "datetime2", nullable: true),
                     HoeveelheidGebakken = table.Column<int>(type: "int", nullable: true),
                     HoeveelheidDerving = table.Column<int>(type: "int", nullable: true),
-                    MedewerkerId = table.Column<int>(type: "int", nullable: false)
+                    MedewerkerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,8 +97,7 @@ namespace BreadCore.Migrations
                         name: "FK_Brood_BroodType_BroodTypeID",
                         column: x => x.BroodTypeID,
                         principalTable: "BroodType",
-                        principalColumn: "BroodTypeID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "BroodTypeID");
                     table.ForeignKey(
                         name: "FK_Brood_Filiaal_GebakkenFiliaalId",
                         column: x => x.GebakkenFiliaalId,
@@ -109,8 +108,7 @@ namespace BreadCore.Migrations
                         name: "FK_Brood_Medewerker_MedewerkerId",
                         column: x => x.MedewerkerId,
                         principalTable: "Medewerker",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

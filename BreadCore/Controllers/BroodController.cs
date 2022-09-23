@@ -1,14 +1,18 @@
 ﻿using BreadCore.Data;
 using BreadCore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BreadCore.Controllers
 {
     public class BroodController : Controller
     {
         private readonly AppDbContext database;
-
         public BroodController(AppDbContext database)
         {
             this.database = database;
@@ -38,10 +42,29 @@ namespace BreadCore.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> BroodOpsplitsen(List<int> BroodTypeID, List<int> HoeveelheidGebakken)
+        {
+            for (int i = 0; i < BroodTypeID.Count; i++)
+            {
+                Brood brood = new Brood();
+                brood.BroodTypeID = BroodTypeID[i];
+                brood.HoeveelheidGebakken = HoeveelheidGebakken[i];
+                brood.GebakkenFiliaalId = 1;
+                brood.MedewerkerId = 2;
+                brood.TijdGebakken = DateTime.Now;
+                await BroodAanmaken(brood);
+            }
+            return View("GebakkenBakprogrammaKiezen");
+        }
 
-
-        public async Task<IActionResult> BroodAanmaken()
-        { 
+        public async Task<IActionResult> BroodAanmaken(Brood brood)
+        {
+            if (ModelState.IsValid)
+            {
+                database.Brood.Add(brood);
+                await database.SaveChangesAsync();
+                return View();
+            }
             return View();
         }
     }

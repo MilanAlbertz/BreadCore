@@ -8,7 +8,7 @@ namespace BreadCore.Models
     {
         [Key]
         public int BroodTypeID { get; set; } 
-        public string Type { get; set; }
+        public string? Type { get; set; }
         public int Code { get; set; }
         public int BakprogrammaId { get; set; }
         public Bakprogramma? Bakprogramma { get; set; }

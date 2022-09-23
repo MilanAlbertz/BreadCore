@@ -22,27 +22,27 @@
             </tr>
         </thead>
         <tbody>
-            <form method="post" asp-action="BroodAanmaken">
+            <form method="post" asp-action="BroodOpsplitsen">
                 @foreach (var item in Model.BroodTypes)
                 {
                 <tr>
                     <td>
                          @Html.DisplayFor(modelItem => item.Type)
-                         <input type="hidden" value="@item.Type">
+                        <input type="hidden" name="BroodTypeID" value="@item.BroodTypeID">
                     </td>
                     <td>
                          @Html.DisplayFor(modelItem => item.Code)
-                        <input type="hidden" value="@item.Code">
                     </td>
                     <td>
-                        <input type="number" name="hoeveelheidGebakken" max="1000" required>
+                        <input type="number" name="HoeveelheidGebakken" max="1000" required>
                     </td>
                 </tr>
                 }
                 <submit>
-                    <input type="submit" class="btn btn-lg btn-primary btn-block">
+                    <input type = "submit" class="btn btn-lg btn-primary btn-block">
                 </submit>
             </form>
         </tbody>
     </table>
 </div>
+
