@@ -47,6 +47,9 @@ namespace BreadCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("Bakprogramma")
+                        .HasColumnType("int");
+
                     b.Property<int?>("BroodTypeID")
                         .HasColumnType("int");
 

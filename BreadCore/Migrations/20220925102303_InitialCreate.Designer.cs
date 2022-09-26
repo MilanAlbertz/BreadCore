@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreadCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220923073145_InitialCreate")]
+    [Migration("20220925102303_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,9 @@ namespace BreadCore.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("Bakprogramma")
+                        .HasColumnType("int");
 
                     b.Property<int?>("BroodTypeID")
                         .HasColumnType("int");

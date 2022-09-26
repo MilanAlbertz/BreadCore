@@ -1,17 +1,17 @@
 ﻿@using Microsoft.Data.SqlClient
 @model BreadCore.Models.Bakprogramma
 @{
-    ViewBag.Title = "GebakkenBakprogrammaKiezen";
+    ViewBag.Title = "DervingBakprogrammaKiezen";
     int aantalBakprogrammas = Int16.Parse(ViewBag.Message);
 }
-<h1 class="text-center" style="padding-top: 20px">Bakken Bakprogramma Kiezen</h1>
+<h1 class="text-center" style="padding-top: 20px">Derving Bakprogramma Kiezen</h1>
 
 <div class="text-center" style="padding: 200px 0;">
     @{
         for (int i = 1; i <= aantalBakprogrammas; i++)
         {
             <button class="btn-dark card-btn" style="width: 200px!important;">
-                <a style="color:white" asp-route-id="@i" asp-controller="Brood" asp-action="GebakkenBroodInvoeren">Programma @i</a>
+                <a style="color:white" asp-route-id="@i" asp-controller="Brood" asp-action="DervingBroodInvoeren">Programma @i</a>
             </button>
         }
     }

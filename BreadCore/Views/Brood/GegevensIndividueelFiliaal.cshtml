@@ -1,0 +1,51 @@
+﻿@model List<Brood>
+@using static BreadCore.Models.BroodType
+@using Microsoft.Data.SqlClient
+
+@{
+    ViewData["Title"] = "GegevensIndividueelFiliaal";
+    var brood = Model.First();
+}
+<h1 style="text-align: center; padding-top: 20px">Gegevens Filiaal @brood.GebakkenFiliaalId</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Brood Type
+            </th>
+            <td>
+                Hoeveelheid Gebakken
+            </td>
+            <th>
+                Hoeveelheid Derving
+            </th>
+            <td>
+                Medewerker
+            </td>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model){
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelitem => item.BroodTypeID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HoeveelheidGebakken)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HoeveelheidDerving)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MedewerkerId)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

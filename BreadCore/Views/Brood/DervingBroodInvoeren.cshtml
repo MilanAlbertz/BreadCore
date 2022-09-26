@@ -1,8 +1,11 @@
 ﻿@model BreadCore.Models.Bakprogramma
-<h1 class="text-center" style="padding-top: 20px">Details</h1>
+
 @{
-    ViewBag.Title = "GebakkenBroodInvoeren";
+    ViewBag.Title = "DervingBroodInvoeren";
 }
+
+<h1 class="text-center" style="padding-top: 20px">Details</h1>
+
 <div>
     <h4> Bak Programma: @Html.DisplayFor(modelItem => Model.Id)</h4>
 
@@ -16,13 +19,13 @@
                     Code
                 </th>
                 <th>
-                    Hoeveelheid gebakken
+                    Hoeveelheid derving
                 </th>
 
             </tr>
         </thead>
         <tbody>
-            <form method="post" asp-action="BroodOpsplitsen">
+            <form method="post" asp-action="DervingBroodOpsplitsen">
                 @foreach (var item in Model.BroodTypes)
                 {
                 <tr>
@@ -32,13 +35,12 @@
                         <input type="hidden" name="BedienerNr" value="@User.Claims.First().ToString()">
                         <input type="hidden" name="Wachtwoord" value="@User.Claims.Last().ToString()">
                         <input type="hidden" name="Bakprogramma" value="@Model.Id">
-
                     </td>
                     <td>
                          @Html.DisplayFor(modelItem => item.Code)
                     </td>
                     <td>
-                        <input type="number" name="HoeveelheidGebakken" max="1000" required>
+                        <input type="number" name="HoeveelheidDerving" max="1000" required>
                     </td>
                 </tr>
                 }

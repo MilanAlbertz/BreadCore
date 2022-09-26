@@ -10,7 +10,9 @@
 </head>
 
 <body style="background-color: white">
-    @if (ViewData["Title"] == "MedewerkersBeheren" || ViewData["Title"] == "FilialenBeheren" || ViewData["Title"] == "SysteemBeheerder")
+    @if (ViewData["Title"] == "MedewerkersBeheren" || ViewData["Title"] == "FilialenBeheren" || ViewData["Title"] == "SysteemBeheerder" || ViewData["Title"] == "Create" ||
+    ViewData["Title"] == "Delete" || ViewData["Title"] == "Edit" || ViewData["Title"] == "CreateFiliaal" || ViewData["Title"] == "EditFiliaal" ||
+    ViewData["Title"] == "DetailsFiliaal")
     {
         <header style="">
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3" style="margin-bottom: 0px!important; border-bottom: solid; background-color: lightgray!important">
@@ -38,6 +40,67 @@
             </nav>
         </header>
     }
+
+    @if (ViewData["Title"] == "Medewerker" || ViewData["Title"] == "BroodAanmaken" || ViewData["Title"] == "DervingBakprogrammaKiezen" || ViewData["Title"] == "DervingBroodInvoeren" ||
+    ViewData["Title"] == "GebakkenBakprogrammaKiezen" || ViewData["Title"] == "GebakkenBroodInvoeren" || ViewData["Title"] == "CreateFiliaal" || ViewData["Title"] == "EditFiliaal" ||
+    ViewData["Title"] == "DetailsFiliaal")
+    {
+        <header style="">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3" style="margin-bottom: 0px!important; border-bottom: solid; background-color: lightgray!important">
+                <div class="container-fluid">
+                    <a asp-area="" asp-controller="Medewerkers" asp-action="Medewerker"><img src="~/Images/logo aldi.png" style="width:auto; height: 50px" /></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item" style="border-right: solid;">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Brood" asp-action="GebakkenBakprogrammaKiezen">Bakken</a>
+                            </li>
+                            <li class="nav-item" style="border-right: solid;">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Brood" asp-action="DervingBakprogrammaKiezen">Derving</a>
+                            </li>
+
+                            <li class="nav-item  me-auto">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Medewerkers" asp-action="Logout">Uitloggen</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+
+    @if (ViewData["Title"] == "Manager")
+    {
+        <header style="">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3" style="margin-bottom: 0px!important; border-bottom: solid; background-color: lightgray!important">
+                <div class="container-fluid">
+                    <a asp-area="" asp-controller="Medewerkers" asp-action="Manager"><img src="~/Images/logo aldi.png" style="width:auto; height: 50px" /></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item" style="border-right: solid;">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Medewerkers" asp-action="GebakkenBakprogrammaKiezen">Bakken</a>
+                            </li>
+                            <li class="nav-item" style="border-right: solid;">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Medewerkers" asp-action="DervingBakprogrammaKiezen">Derving</a>
+                            </li>
+
+                            <li class="nav-item  me-auto">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Medewerkers" asp-action="Logout">Uitloggen</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+
 
     <div>
         <main role="main" class="pb-3">

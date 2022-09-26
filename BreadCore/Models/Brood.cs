@@ -19,6 +19,8 @@ namespace BreadCore.Models
         public int? HoeveelheidDerving { get; set; }
         public int? MedewerkerId { get; set; }
         public Medewerker? Medewerker { get; set; }
+        public int? Bakprogramma { get; set; }
+
     }
 }
 

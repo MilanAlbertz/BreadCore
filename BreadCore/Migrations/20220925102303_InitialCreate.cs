@@ -88,7 +88,8 @@ namespace BreadCore.Migrations
                     TijdGebakken = table.Column<DateTime>(type: "datetime2", nullable: true),
                     HoeveelheidGebakken = table.Column<int>(type: "int", nullable: true),
                     HoeveelheidDerving = table.Column<int>(type: "int", nullable: true),
-                    MedewerkerId = table.Column<int>(type: "int", nullable: true)
+                    MedewerkerId = table.Column<int>(type: "int", nullable: true),
+                    Bakprogramma = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

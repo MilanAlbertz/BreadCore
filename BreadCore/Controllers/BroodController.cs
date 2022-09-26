@@ -1,12 +1,20 @@
 ﻿using BreadCore.Data;
 using BreadCore.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
+using MySql.Data.MySqlClient;
 using System;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using NuGet.Protocol;
 
 namespace BreadCore.Controllers
 {
@@ -20,8 +28,6 @@ namespace BreadCore.Controllers
 
         public async Task<IActionResult> GebakkenBroodInvoeren(int? id)
         {
-            //bepaal programma
-            //maak lijst met brood entiteiten
             if (id == null || database.Bakprogramma == null)
             {
                 return NotFound();
@@ -35,37 +41,138 @@ namespace BreadCore.Controllers
             {
                 return NotFound();
             }
-            //geef lijst door aan view
             return View(bakprogramma);
         }
         public IActionResult GebakkenBakprogrammaKiezen()
         {
+            int aantalBakprogrammas = database.Bakprogramma.Count();
+            ViewBag.Message = aantalBakprogrammas.ToString();
             return View();
         }
-        public async Task<IActionResult> BroodOpsplitsen(List<int> BroodTypeID, List<int> HoeveelheidGebakken)
+        public async Task<IActionResult> BroodOpsplitsen(List<int> BroodTypeID, List<int> HoeveelheidGebakken, string BedienerNr, string Wachtwoord, int Bakprogramma)
         {
-            for (int i = 0; i < BroodTypeID.Count; i++)
+            int loop = BroodTypeID.Count();
+            for (int i = 0; i < loop; i++)
             {
-                Brood brood = new Brood();
-                brood.BroodTypeID = BroodTypeID[i];
-                brood.HoeveelheidGebakken = HoeveelheidGebakken[i];
-                brood.GebakkenFiliaalId = 1;
-                brood.MedewerkerId = 2;
-                brood.TijdGebakken = DateTime.Now;
-                await BroodAanmaken(brood);
+                string alleenBedienerNr = BedienerNr.Replace("bedienerNr: ", " ");
+                int IntBedienerNr = Int16.Parse(alleenBedienerNr);
+                string alleenWachtwoord = Wachtwoord.Replace("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier: ", " ");
+                int IntWachtwoord = Int16.Parse(alleenWachtwoord);
+                var werkendFiliaal = database.Medewerker
+                    .Where(d => d.BedienerNr == IntBedienerNr)
+                    .Where(d => d.Wachtwoord == IntWachtwoord).FirstOrDefault();
+                var record = database.Brood
+                    .Where(d => d.TijdGebakken == DateTime.Now.Date)
+                    .Where(d => d.BroodTypeID == BroodTypeID[i])
+                    .Where(d => d.GebakkenFiliaalId == werkendFiliaal.FiliaalId);
+                if (record.Count() > 0)
+                {
+                    var recordUpdate = record.FirstOrDefault();
+                    recordUpdate.HoeveelheidGebakken += HoeveelheidGebakken[i];
+                    database.Brood.Update(recordUpdate);
+                    await database.SaveChangesAsync();
+                }
+                else
+                {
+                    Brood nieuwBrood = new Brood();
+                    nieuwBrood.BroodTypeID = BroodTypeID[i];
+                    nieuwBrood.HoeveelheidGebakken = HoeveelheidGebakken[i];
+                    nieuwBrood.GebakkenFiliaalId = werkendFiliaal.FiliaalId;
+                    nieuwBrood.MedewerkerId = IntBedienerNr;
+                    nieuwBrood.TijdGebakken = DateTime.Now.Date;
+                    nieuwBrood.Bakprogramma = Bakprogramma;
+                    if (ModelState.IsValid)
+                    {
+                        database.Brood.Add(nieuwBrood);
+                        await database.SaveChangesAsync();
+                    }
+                }
             }
+            int aantalBakprogrammas = database.Bakprogramma.Count();
+            ViewBag.Message = aantalBakprogrammas.ToString();
             return View("GebakkenBakprogrammaKiezen");
         }
 
-        public async Task<IActionResult> BroodAanmaken(Brood brood)
+        public async Task<IActionResult> DervingBroodInvoeren(int? id)
         {
-            if (ModelState.IsValid)
+            if (id == null || database.Bakprogramma == null)
             {
-                database.Brood.Add(brood);
-                await database.SaveChangesAsync();
-                return View();
+                return NotFound();
             }
+
+            var bakprogramma = await database.Bakprogramma
+                .Include(k => k.BroodTypes)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (bakprogramma == null)
+            {
+                return NotFound();
+            }
+            return View(bakprogramma);
+        }
+        public IActionResult DervingBakprogrammaKiezen()
+        {
+            int aantalBakprogrammas = database.Bakprogramma.Count();
+            ViewBag.Message = aantalBakprogrammas.ToString();
             return View();
+        }
+        public async Task<IActionResult> DervingBroodOpsplitsen(List<int> BroodTypeID, List<int> HoeveelheidDerving, int Bakprogramma, string BedienerNr, string Wachtwoord)
+        {
+            string alleenBedienerNr = BedienerNr.Replace("bedienerNr: ", " ");
+            int IntBedienerNr = Int16.Parse(alleenBedienerNr);
+            string alleenWachtwoord = Wachtwoord.Replace("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier: ", " ");
+            int IntWachtwoord = Int16.Parse(alleenWachtwoord);
+            var werkendFiliaal = database.Medewerker
+                .Where(d => d.BedienerNr == IntBedienerNr)
+                .Where(d => d.Wachtwoord == IntWachtwoord).FirstOrDefault();
+
+            foreach (var brood in database.Brood
+                .Where(d => d.TijdGebakken == DateTime.Now.Date)
+                .Where(d => d.Bakprogramma == Bakprogramma)
+                .Where(d => d.GebakkenFiliaalId == werkendFiliaal.FiliaalId))
+            {
+                if (ModelState.IsValid && brood.HoeveelheidDerving == null)
+                {
+                    brood.HoeveelheidDerving = HoeveelheidDerving[0];
+                    database.Brood.Update(brood);
+                    HoeveelheidDerving.Remove(HoeveelheidDerving[0]);
+                }
+            }
+            await database.SaveChangesAsync();
+            int aantalBakprogrammas = database.Bakprogramma.Count();
+            ViewBag.Message = aantalBakprogrammas.ToString();
+            return View("DervingBakprogrammaKiezen");
+        }
+        public IActionResult Manager()
+        {
+            return View();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult FiliaalKiezen()
+        {
+            return View();
+        }
+
+        public IActionResult GegevensIndividueelFiliaal(string FiliaalNaam, DateTime EersteDatum, DateTime TweedeDatum)
+        {
+            var Filiaal = database.Filiaal
+            .Where(d => d.FiliaalNaam == FiliaalNaam).FirstOrDefault();
+            var FiliaalId = Filiaal.FiliaalId;
+            List<Brood> broden = new List<Brood>();
+            foreach (var brood in database.Brood
+                .Where(d => d.GebakkenFiliaalId == FiliaalId)
+                .Where(d => d.TijdGebakken >= EersteDatum)
+                .Where(d => d.TijdGebakken <= TweedeDatum))
+                
+            {
+                broden.Add(brood);
+            }
+            return View(broden);
         }
     }
 }
