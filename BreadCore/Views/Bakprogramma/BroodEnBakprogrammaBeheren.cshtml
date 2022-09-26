@@ -1,10 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "Manager";
+    ViewData["Title"] = "BroodEnBakprogrammaBeheren";
 }
 
-<div style="background-color:darkslateblue; padding-bottom: 20px">
-    <h1 style="text-align: center; color: white; font-size: 70px;">Welkom</h1>
-</div>
 <div class="row">
     <div class="container">
         <div class="two-grid">
@@ -12,7 +9,7 @@
                 <div class="SysteemBeheerderContrainer inner-wraps">
                     <img src="../Images/Medewerkers.png" class="SysteemBeheerderImg card-img" />
                     <button class="btn-dark card-btn">
-                        <a style="color:white" asp-area="" asp-controller="Brood" asp-action="FiliaalKiezen">Gegevens filiaal</a>
+                        <a style="color:white" asp-area="" asp-controller="Brood" asp-action="Broodbeheren">Brood Beheren</a>
                     </button>
                 </div>
             </div>
@@ -20,7 +17,7 @@
                 <div class="SysteemBeheerderContrainer inner-wraps">
                     <img src="../Images/Filiaal.png" class="SysteemBeheerderImg card-img" />
                     <button class="btn-dark card-btn">
-                        <a style="color:white" asp-controller="Brood" asp-action="DatumKiezenAlleFilialen">Gegevens alle filialen</a>
+                        <a style="color:white" asp-controller="Bakprogramma" asp-action="BakprogrammaBeheren">Bakprogramma Beheren</a>
                     </button>
                 </div>
             </div>

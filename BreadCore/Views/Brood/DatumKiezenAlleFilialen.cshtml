@@ -1,14 +1,13 @@
 ﻿@model BreadCore.Models.Brood
 @{
-    ViewData["Title"] = "FiliaalKiezen";
+    ViewData["Title"] = "DatumKiezenAlleFilialen";
 }
 
 <h1 style="text-align: center; padding-top: 20px">Gegevens Filiaal</h1>
-<form method="post" asp-controller="Brood" asp-action="GegevensIndividueelFiliaal">
+<form method="post" asp-controller="Brood" asp-action="GegevensAlleFilialen">
 </form>
 <div class="col-md-4" style="display:block; width:50%; margin:0 auto;">
     <form method="post" asp-action="GegevensIndividueelFiliaal" class="loginField text-center" style="border: solid; border-width: 5px">
-        <input type="text" name="FiliaalNaam" style="width: 200px!important; margin-bottom: 5px"> <br />
         <label>Van:</label>
         <input type="date" name="EersteDatum" style="margin-bottom: 5px"><br />
         <label>Tot:</label>

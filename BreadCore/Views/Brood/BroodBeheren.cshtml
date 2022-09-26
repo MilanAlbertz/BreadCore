@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BroodType>
+@{
+    ViewData["Title"] = "BroodBeheren";
+}
+<h1 style="text-align: center; padding-top: 20px">Brood Beheren</h1>
+
+<button class="btn-dark card-btn" style="width: 200px!important">
+    <a style="color:white" asp-action="Create">Brood Toevoegen</a>
+</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                Bak Programma
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BakprogrammaId)
+                </td>
+
+                <td>
+                    <a asp-controller="Brood" asp-action="Edit" asp-route-id="@item.BroodTypeID">Edit</a> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

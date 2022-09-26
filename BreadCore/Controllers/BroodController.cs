@@ -174,5 +174,101 @@ namespace BreadCore.Controllers
             }
             return View(broden);
         }
+
+        public async Task<IActionResult> BroodBeheren()
+        {
+            return database.BroodType != null ?
+            View(await database.BroodType.ToListAsync()) :
+            Problem("Entity set 'AppDbContext.BroodType'  is null.");
+        }
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Medewerkers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Type,Code,BakprogrammaId")] BroodType broodType)
+        {
+            if (ModelState.IsValid)
+            {
+                database.Add(broodType);
+                await database.SaveChangesAsync();
+                return RedirectToAction("BroodBeheren");
+            }
+            return View("BroodBeheren");
+        }
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || database.BroodType == null)
+            {
+                return NotFound();
+            }
+
+            var broodType = await database.BroodType.FindAsync(id);
+            if (broodType == null)
+            {
+                return NotFound();
+            }
+            return View(broodType);
+        }
+
+        // POST: Medewerkers/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("BroodTypeID,Type,Code,BakprogrammaId")] BroodType broodType)
+        {
+            if (id != broodType.BroodTypeID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    database.Update(broodType);
+                    await database.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!BroodTypeExists(broodType.BroodTypeID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Broodbeheren");
+            }
+            return View("BroodBeheren");
+        }
+        private bool BroodTypeExists(int id)
+        {
+            return (database.BroodType?.Any(e => e.BroodTypeID == id)).GetValueOrDefault();
+        }
+            
+        public IActionResult DatumKiezenAlleFilialen()
+        {
+            return View();
+        }
+        public IActionResult GegevensAlleFilialen(DateTime EersteDatum, DateTime TweedeDatum)
+        {
+            List<Brood> broden = new List<Brood>();
+            foreach (var brood in database.Brood
+                .Where(d => d.TijdGebakken >= EersteDatum)
+                .Where(d => d.TijdGebakken <= TweedeDatum))
+            {
+                broden.Add(brood);
+            }
+            return View(broden);
+        }
     }
 }

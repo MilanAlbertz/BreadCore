@@ -98,4 +98,17 @@ body, html {
     max-width: 100% !important;
 }
 
+.three-grid {
+    margin: auto;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap: 80px;
+}
+
+    .three-grid > div {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
 

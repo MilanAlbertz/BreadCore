@@ -12,5 +12,6 @@ namespace BreadCore.Data
         public DbSet<Bakprogramma> Bakprogramma { get; set; }
         public DbSet<Medewerker> Medewerker { get; set; }
         public DbSet<Filiaal> Filiaal { get; set; }
+        public DbSet<BroodType> BroodType { get; set; }
     }
 }
