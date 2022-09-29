@@ -75,7 +75,8 @@
         </header>
     }
 
-    @if (ViewData["Title"] == "Manager" || ViewData["Title"] == "FiliaalKiezen" || ViewData["Title"] == "GegevensIndividueelFiliaal")
+    @if (ViewData["Title"] == "Manager" || ViewData["Title"] == "FiliaalKiezen" || ViewData["Title"] == "GegevensIndividueelFiliaal"
+    || ViewData["Title"] == "GegevensAlleFilialen" || ViewData["Title"] == "DatumKiezenAlleFilialen")
     {
         <header style="">
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3" style="margin-bottom: 0px!important; border-bottom: solid; background-color: lightgray!important">
@@ -91,7 +92,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Brood" asp-action="FiliaalKiezen">Individueel Filiaal</a>
                             </li>
                             <li class="nav-item" style="border-right: solid;">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Medewerkers" asp-action="DervingBakprogrammaKiezen">Alle Filialen</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Brood" asp-action="DatumKiezenAlleFilialen">Alle Filialen</a>
                             </li>
 
                             <li class="nav-item  me-auto">

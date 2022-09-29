@@ -167,8 +167,9 @@ namespace BreadCore.Controllers
             foreach (var brood in database.Brood
                 .Where(d => d.GebakkenFiliaalId == FiliaalId)
                 .Where(d => d.TijdGebakken >= EersteDatum)
-                .Where(d => d.TijdGebakken <= TweedeDatum))
-                
+                .Where(d => d.TijdGebakken <= TweedeDatum)
+                .Include(d => d.GebakkenFiliaal)
+                .Include(d => d.BroodType))
             {
                 broden.Add(brood);
             }
@@ -261,13 +262,22 @@ namespace BreadCore.Controllers
         }
         public IActionResult GegevensAlleFilialen(DateTime EersteDatum, DateTime TweedeDatum)
         {
+            List<BroodType> broodTypes = new List<BroodType>();
             List<Brood> broden = new List<Brood>();
+
             foreach (var brood in database.Brood
                 .Where(d => d.TijdGebakken >= EersteDatum)
-                .Where(d => d.TijdGebakken <= TweedeDatum))
+                .Where(d => d.TijdGebakken <= TweedeDatum)
+                .Include(d => d.BroodType))
             {
                 broden.Add(brood);
+                if (!broodTypes.Contains(brood.BroodType)){
+                    broodTypes.Add(brood.BroodType);
+                }
             }
+            ViewData["GebakkenBroden"] = Broodberekenaar.GemiddeldeGebakkenAlleFilialenBerekenen(broden, broodTypes);
+            ViewData["DervingBroden"] = Broodberekenaar.GemiddeldeDervingAlleFilialenBerekenen(broden, broodTypes);
+            ViewData["BroodTypes"] = broodTypes;
             return View(broden);
         }
     }

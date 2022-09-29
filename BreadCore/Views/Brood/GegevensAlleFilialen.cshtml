@@ -4,6 +4,10 @@
 
 @{
     ViewData["Title"] = "GegevensAlleFilialen";
+    List<int?> broodTypesGebakken = ViewData["GebakkenBroden"] as List<int?>;
+    List<int?> broodTypesBedorven = ViewData["DervingBroden"] as List<int?>;
+    List<BroodType> broodTypes = ViewData["BroodTypes"] as List<BroodType?>;
+
 }
 <h1 style="text-align: center; padding-top: 20px">Gegevens Alle Filialen</h1>
 
@@ -14,32 +18,27 @@
                 Brood Type
             </th>
             <th>
-                Hoeveelheid Gebakken
+                Hoeveelheid Gemiddelde Gebakken
             </th>
             <th>
-                Hoeveelheid Derving
-            </th>
-            <th>
-                Medewerker
+                Hoeveelheid Gemiddelde Derving
             </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model){
+        @for (int i = 0; i < broodTypes.Count; i++)
+        {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelitem => item.BroodTypeID)
+                    @broodTypes[i].Type
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.HoeveelheidGebakken)
+                    @broodTypesGebakken[i]
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.HoeveelheidDerving)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MedewerkerId)
+                    @broodTypesBedorven[i]
                 </td>
             </tr>
         }
