@@ -32,7 +32,6 @@
                         <input type="hidden" name="BedienerNr" value="@User.Claims.First().ToString()">
                         <input type="hidden" name="Wachtwoord" value="@User.Claims.Last().ToString()">
                         <input type="hidden" name="Bakprogramma" value="@Model.Id">
-
                     </td>
                     <td>
                          @Html.DisplayFor(modelItem => item.Code)

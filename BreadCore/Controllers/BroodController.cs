@@ -15,6 +15,8 @@ using System.Security.Cryptography;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using NuGet.Protocol;
+using BreadCore.Models.ViewModels;
+using NuGet.Packaging.Signing;
 
 namespace BreadCore.Controllers
 {
@@ -262,23 +264,32 @@ namespace BreadCore.Controllers
         }
         public IActionResult GegevensAlleFilialen(DateTime EersteDatum, DateTime TweedeDatum)
         {
-            List<BroodType> broodTypes = new List<BroodType>();
-            List<Brood> broden = new List<Brood>();
+            GegevensAlleFilialenViewModel gegevensAlleFilialenViewModel = new GegevensAlleFilialenViewModel()
+            {
+                BeginDatum = EersteDatum,
+                Einddatum = TweedeDatum,
+            };
+            gegevensAlleFilialenViewModel.Brood = new List<Brood?>();
+            gegevensAlleFilialenViewModel.BroodTypes = new List<BroodType?>();
+            gegevensAlleFilialenViewModel.HoeveelheidGebakken = new List<int?>();
+            gegevensAlleFilialenViewModel.HoeveelheidDerving = new List<int?>();
+            Brood broodje = new Brood();
+            broodje.BroodTypeID = 6;
 
             foreach (var brood in database.Brood
                 .Where(d => d.TijdGebakken >= EersteDatum)
                 .Where(d => d.TijdGebakken <= TweedeDatum)
                 .Include(d => d.BroodType))
             {
-                broden.Add(brood);
-                if (!broodTypes.Contains(brood.BroodType)){
-                    broodTypes.Add(brood.BroodType);
+                gegevensAlleFilialenViewModel.Brood.Add(brood);
+                
+                if (!gegevensAlleFilialenViewModel.BroodTypes.Contains(brood.BroodType)){
+                    gegevensAlleFilialenViewModel.BroodTypes.Add(brood.BroodType);
                 }
             }
-            ViewData["GebakkenBroden"] = Broodberekenaar.GemiddeldeGebakkenAlleFilialenBerekenen(broden, broodTypes);
-            ViewData["DervingBroden"] = Broodberekenaar.GemiddeldeDervingAlleFilialenBerekenen(broden, broodTypes);
-            ViewData["BroodTypes"] = broodTypes;
-            return View(broden);
+            gegevensAlleFilialenViewModel.HoeveelheidGebakken = Broodberekenaar.GemiddeldeGebakkenAlleFilialenBerekenen(gegevensAlleFilialenViewModel.Brood, gegevensAlleFilialenViewModel.BroodTypes);
+            gegevensAlleFilialenViewModel.HoeveelheidDerving = Broodberekenaar.GemiddeldeDervingAlleFilialenBerekenen(gegevensAlleFilialenViewModel.Brood, gegevensAlleFilialenViewModel.BroodTypes);
+            return View(gegevensAlleFilialenViewModel);
         }
     }
 }

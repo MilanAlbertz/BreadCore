@@ -1,14 +1,7 @@
-﻿@model List<Brood>
+﻿@model BreadCore.Models.ViewModels.GegevensAlleFilialenViewModel
 @using static BreadCore.Models.BroodType
 @using Microsoft.Data.SqlClient
 
-@{
-    ViewData["Title"] = "GegevensAlleFilialen";
-    List<int?> broodTypesGebakken = ViewData["GebakkenBroden"] as List<int?>;
-    List<int?> broodTypesBedorven = ViewData["DervingBroden"] as List<int?>;
-    List<BroodType> broodTypes = ViewData["BroodTypes"] as List<BroodType?>;
-
-}
 <h1 style="text-align: center; padding-top: 20px">Gegevens Alle Filialen</h1>
 
 <table class="table">
@@ -28,17 +21,17 @@
         </tr>
     </thead>
     <tbody>
-        @for (int i = 0; i < broodTypes.Count; i++)
+        @for (int i = 0; i < Model.BroodTypes.Count; i++)
         {
             <tr>
                 <td>
-                    @broodTypes[i].Type
+                    @Model.BroodTypes[i].Type
                 </td>
                 <td>
-                    @broodTypesGebakken[i]
+                    @Model.HoeveelheidGebakken[i]
                 </td>
                 <td>
-                    @broodTypesBedorven[i]
+                    @Model.HoeveelheidDerving[i]
                 </td>
             </tr>
         }
