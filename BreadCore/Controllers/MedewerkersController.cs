@@ -48,6 +48,7 @@ namespace BreadCore.Controllers
         // GET: Medewerkers/Create
         public IActionResult Create()
         {
+            ViewData["Filialen"] = _context.Filiaal.ToList();
             return View();
         }
 
@@ -80,6 +81,7 @@ namespace BreadCore.Controllers
             {
                 return NotFound();
             }
+            ViewData["Filialen"] = _context.Filiaal.ToList();
             return View(medewerker);
         }
 
@@ -168,29 +170,43 @@ namespace BreadCore.Controllers
         }
 
         [HttpGet("login")]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login()
         {
-            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Validate(int bedienerNr, int wachtwoord, string returnUrl)
+        public async Task<IActionResult> Validate(int bedienerNr, int wachtwoord)
         {
-            foreach (var medewerker in _context.Medewerker.Where(d => d.BedienerNr == bedienerNr))
+            if(_context.Medewerker.Count() != 0)
             {
-                if (medewerker.BedienerNr == bedienerNr & medewerker.Wachtwoord == wachtwoord)
+                foreach (var medewerker in _context.Medewerker.Where(d => d.BedienerNr == bedienerNr))
                 {
-                    var claims = new List<Claim>();
-                    claims.Add(new Claim("bedienerNr", bedienerNr.ToString()));
-                    claims.Add(new Claim("wachtwoord", wachtwoord.ToString()));
-                    claims.Add(new Claim(ClaimTypes.NameIdentifier, bedienerNr.ToString()));
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-                    await HttpContext.SignInAsync(claimsPrincipal);
-                    return Redirect(returnUrl);
+                    if (medewerker.BedienerNr == bedienerNr & medewerker.Wachtwoord == wachtwoord)
+                    {
+                        var claims = new List<Claim>();
+                        claims.Add(new Claim("bedienerNr", bedienerNr.ToString()));
+                        claims.Add(new Claim("wachtwoord", wachtwoord.ToString()));
+                        claims.Add(new Claim(ClaimTypes.NameIdentifier, bedienerNr.ToString()));
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                        await HttpContext.SignInAsync(claimsPrincipal);
+                        if (medewerker.Rol == "Medewerker")
+                        {
+                            return View("Medewerker");
+                        }
+                        if (medewerker.Rol == "Manager")
+                        {
+                            return View("Manager");
+                        }
+                        if (medewerker.Rol == "Systeem Beheerder")
+                        {
+                            return View("SysteemBeheerder");
+                        }
+                    }
                 }
             }
+            
             TempData["Error"] = "Helaas. Bedienernummer of Wachtwoord is fout.";
             return View("Login");
         }
@@ -208,7 +224,7 @@ namespace BreadCore.Controllers
         public async Task<IActionResult> MedewerkersBeheren(string returnUrl)
         {
             return _context.Medewerker != null ?
-            View(await _context.Medewerker.ToListAsync()) :
+            View(await _context.Medewerker.Include(f => f.Filiaal).ToListAsync()) :
             Problem("Entity set 'AppDbContext.Medewerker'  is null.");
         }
         [Authorize]

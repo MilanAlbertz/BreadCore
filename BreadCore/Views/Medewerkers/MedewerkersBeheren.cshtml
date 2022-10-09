@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Medewerker>
 @{
     ViewData["Title"] = "MedewerkersBeheren";
+
 }
 <h1 style="text-align: center; padding-top: 20px">Medewerkers Beheren</h1>
 
@@ -19,9 +20,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Rol)
             </th>
-            <td>
-                @Html.DisplayNameFor(model => model.FiliaalId)
-            </td>
+            <th>
+                Filiaal naam
+            </th>
 
             <th></th>
         </tr>
@@ -39,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Rol)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.FiliaalId)
+                    @Html.DisplayFor(modelItem => item.Filiaal.FiliaalNaam)
             </td>
 
             <td>

@@ -2,10 +2,12 @@
 using BreadCore.Models;
 using BreadCore;
 using BreadCore.Controllers;
+using BreadCore;
+using BreadCore.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Test.Controllers
+namespace BreadcoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

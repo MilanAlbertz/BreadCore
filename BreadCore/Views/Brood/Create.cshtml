@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "CreateBrood";
+    var bakprogrammas = ViewData["bakprogrammas"] as List<Bakprogramma>;
 }
 <h1 class="text-center" style="padding-top: 20px">Brood Toevoegen</h1>
 
@@ -20,9 +21,14 @@
         </div>
         <div class="form-group">
             <label asp-for="BakprogrammaId" class="control-label"></label>
-            <input asp-for="BakprogrammaId" class="form-control" />
-            <span asp-validation-for="BakprogrammaId" class="text-danger"></span>
+            <select asp-for="BakprogrammaId" class="form-select">
+                @foreach (var bakprogramma in bakprogrammas)
+                {
+                    <option value="@bakprogramma.Id">@bakprogramma.Naam</option>
+                }
+            </select>
         </div>
+
         <div class="form-group" style="padding-top: 5px">
             <button type="submit" value="Annuleer" class="btn-danger" style="height: 35px; border: none">
                 <a style="color: white!important; text-decoration: none" asp-controller="Brood" asp-action="BroodBeheren">Annuleer</a>

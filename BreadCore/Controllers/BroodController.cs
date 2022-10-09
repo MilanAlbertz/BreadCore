@@ -17,6 +17,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using NuGet.Protocol;
 using BreadCore.Models.ViewModels;
 using NuGet.Packaging.Signing;
+using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 
 namespace BreadCore.Controllers
 {
@@ -60,13 +61,13 @@ namespace BreadCore.Controllers
                 int IntBedienerNr = Int16.Parse(alleenBedienerNr);
                 string alleenWachtwoord = Wachtwoord.Replace("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier: ", " ");
                 int IntWachtwoord = Int16.Parse(alleenWachtwoord);
-                var werkendFiliaal = database.Medewerker
+                var huidigeMedewerker = database.Medewerker
                     .Where(d => d.BedienerNr == IntBedienerNr)
                     .Where(d => d.Wachtwoord == IntWachtwoord).FirstOrDefault();
                 var record = database.Brood
                     .Where(d => d.TijdGebakken == DateTime.Now.Date)
                     .Where(d => d.BroodTypeID == BroodTypeID[i])
-                    .Where(d => d.GebakkenFiliaalId == werkendFiliaal.FiliaalId);
+                    .Where(d => d.GebakkenFiliaalId == huidigeMedewerker.FiliaalId);  
                 if (record.Count() > 0)
                 {
                     var recordUpdate = record.FirstOrDefault();
@@ -79,8 +80,8 @@ namespace BreadCore.Controllers
                     Brood nieuwBrood = new Brood();
                     nieuwBrood.BroodTypeID = BroodTypeID[i];
                     nieuwBrood.HoeveelheidGebakken = HoeveelheidGebakken[i];
-                    nieuwBrood.GebakkenFiliaalId = werkendFiliaal.FiliaalId;
-                    nieuwBrood.MedewerkerId = IntBedienerNr;
+                    nieuwBrood.GebakkenFiliaalId = huidigeMedewerker.FiliaalId;
+                    nieuwBrood.MedewerkerId = huidigeMedewerker.Id;
                     nieuwBrood.TijdGebakken = DateTime.Now.Date;
                     nieuwBrood.Bakprogramma = Bakprogramma;
                     if (ModelState.IsValid)
@@ -157,9 +158,9 @@ namespace BreadCore.Controllers
 
         public IActionResult FiliaalKiezen()
         {
+            ViewData["Filialen"] = database.Filiaal.ToList();
             return View();
         }
-
         public IActionResult GegevensIndividueelFiliaal(string FiliaalNaam, DateTime EersteDatum, DateTime TweedeDatum)
         {
             var Filiaal = database.Filiaal
@@ -181,11 +182,12 @@ namespace BreadCore.Controllers
         public async Task<IActionResult> BroodBeheren()
         {
             return database.BroodType != null ?
-            View(await database.BroodType.ToListAsync()) :
+            View(await database.BroodType.Include(b => b.Bakprogramma).ToListAsync()) :
             Problem("Entity set 'AppDbContext.BroodType'  is null.");
         }
         public IActionResult Create()
         {
+            ViewData["bakprogrammas"] = database.Bakprogramma.ToList();
             return View();
         }
 
@@ -216,6 +218,7 @@ namespace BreadCore.Controllers
             {
                 return NotFound();
             }
+            ViewData["bakprogrammas"] = database.Bakprogramma.ToList();
             return View(broodType);
         }
 
@@ -287,9 +290,58 @@ namespace BreadCore.Controllers
                     gegevensAlleFilialenViewModel.BroodTypes.Add(brood.BroodType);
                 }
             }
-            gegevensAlleFilialenViewModel.HoeveelheidGebakken = Broodberekenaar.GemiddeldeGebakkenAlleFilialenBerekenen(gegevensAlleFilialenViewModel.Brood, gegevensAlleFilialenViewModel.BroodTypes);
-            gegevensAlleFilialenViewModel.HoeveelheidDerving = Broodberekenaar.GemiddeldeDervingAlleFilialenBerekenen(gegevensAlleFilialenViewModel.Brood, gegevensAlleFilialenViewModel.BroodTypes);
+            gegevensAlleFilialenViewModel.HoeveelheidGebakken = GemiddeldeGebakkenAlleFilialenBerekenen(gegevensAlleFilialenViewModel.Brood, gegevensAlleFilialenViewModel.BroodTypes);
+            gegevensAlleFilialenViewModel.HoeveelheidDerving = GemiddeldeDervingAlleFilialenBerekenen(gegevensAlleFilialenViewModel.Brood, gegevensAlleFilialenViewModel.BroodTypes);
             return View(gegevensAlleFilialenViewModel);
         }
+        public static List<int?> GemiddeldeGebakkenAlleFilialenBerekenen(List<Brood> broden, List<BroodType> broodTypes)
+        {
+            List<int?> lijstAantalGebakkenBroden = new List<int?>();
+            int? aantalGebakkenBroden = 0;
+            int? aantalTypesGebakken = 0;
+            foreach (var broodType in broodTypes)
+            {
+                foreach (var brood in broden)
+                {
+                    if (broodType.BroodTypeID == brood.BroodTypeID)
+                    {
+                        aantalGebakkenBroden += brood.HoeveelheidGebakken;
+                        aantalTypesGebakken += 1;
+                    }
+                }
+                aantalGebakkenBroden /= aantalTypesGebakken;
+                lijstAantalGebakkenBroden.Add(aantalGebakkenBroden);
+                aantalGebakkenBroden = 0;
+                aantalTypesGebakken = 0;
+
+
+            }
+            return lijstAantalGebakkenBroden;
+
+        }
+        public static List<int?> GemiddeldeDervingAlleFilialenBerekenen(List<Brood> broden, List<BroodType> broodTypes)
+        {
+            List<int?> lijstAantalBedorvenBroden = new List<int?>();
+            int? aantalDervingBroden = 0;
+            int? aantalTypesDerving = 0;
+            foreach (var broodType in broodTypes)
+            {
+                foreach (var brood in broden)
+                {
+                    if (broodType.BroodTypeID == brood.BroodTypeID)
+                    {
+                        aantalDervingBroden += brood.HoeveelheidDerving;
+                        aantalTypesDerving += 1;
+                    }
+                }
+                aantalDervingBroden /= aantalTypesDerving;
+                lijstAantalBedorvenBroden.Add(aantalDervingBroden);
+                aantalDervingBroden = 0;
+                aantalTypesDerving = 0;
+            }
+            return lijstAantalBedorvenBroden;
+        }
+
     }
 }
+

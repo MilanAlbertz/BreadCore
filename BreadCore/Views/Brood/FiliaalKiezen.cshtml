@@ -1,6 +1,7 @@
 ﻿@model BreadCore.Models.Brood
 @{
     ViewData["Title"] = "FiliaalKiezen";
+    var filialen = ViewData["Filialen"] as List<Filiaal>;
 }
 
 <h1 style="text-align: center; padding-top: 20px">Gegevens Filiaal</h1>
@@ -8,11 +9,18 @@
 </form>
 <div class="col-md-4" style="display:block; width:50%; margin:0 auto;">
     <form method="post" asp-action="GegevensIndividueelFiliaal" class="loginField text-center" style="border: solid; border-width: 5px">
-        <input type="text" name="FiliaalNaam" style="width: 200px!important; margin-bottom: 5px"> <br />
-        <label>Van:</label>
-        <input type="date" name="EersteDatum" style="margin-bottom: 5px"><br />
+        <div class="form-group">
+            Filiaal naam:
+            <select name="FiliaalNaam" class="form-select">
+                @foreach (var filiaal in filialen)
+                {
+                    <option value="@filiaal.FiliaalNaam">@filiaal.FiliaalNaam</option>
+                }
+            </select>
+        </div>        <label>Van:</label>
+        <input type="date" name="EersteDatum" style="margin-bottom: 5px" required><br />
         <label>Tot:</label>
-        <input type="date" name="TweedeDatum" style="margin-bottom: 5px"> <br />
+        <input type="date" name="TweedeDatum" style="margin-bottom: 5px" required> <br />
         <submit>
             <input type="submit" class="btn btn-lg btn-primary btn-block">
         </submit>
